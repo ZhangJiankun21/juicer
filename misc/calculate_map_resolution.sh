@@ -51,7 +51,9 @@
 
 # total size of genome, from http://genomewiki.ucsc.edu/index.php/Hg19_Genome_size_statistics
 # modify this number if your genome is not hg19
-total=3137161264
+
+# hg38
+total=3257347282
 
 if [ "$#" -ne 2 ]
 then
@@ -64,22 +66,23 @@ fi
 filename=$1
 coveragename=$2
 
+# $9, $12: mapq
+# $4, $8: frag1, frag2
+# $3, $7: pos1, pos2
+
 # Create 50bp coverage vector
 if [ ! -s $coveragename ]
 then
     awk '{
-      if ($9>0&&$12>0&&$4!=$8)
-        {
-        chr1=0;
-        chr2=0;
+      chr1=0;
+      chr2=0;
 
-        chr1=$2; 
-        chr2=$6;
-        if (chr1!=0&&chr2!=0)
-        {
-         val[chr1 " " int($3/50)*50]++
-         val[chr2 " " int($7/50)*50]++
-        }
+      chr1=$2; 
+      chr2=$4;
+      if (chr1!=0&&chr2!=0)
+      {
+       val[chr1 " " int($3/50)*50]++
+       val[chr2 " " int($5/50)*50]++
       }
    }
    END{
